@@ -6,10 +6,14 @@ var hue         = require("node-hue-api"),
 
 var host     = "192.168.0.14",
     username = "lklRF3zi-CtOPIsA-0NqNglarpDRmR0Ow6x6AgRN",
-    api      = new HueApi(host, username),
-    offDash  = dash_button("18:1e:78:d4:5f:94"),
-    onDash   = dash_button("18:1e:78:d4:5f:11");
+    api      = new HueApi(host, username);
 
+//temps mini entre 2 requetes (pour filter les probes arp)
+var timeout = 30000;
+
+//lister tous les dash à ecoute
+var dash_signal = "18:1e:78:d4:5f:94";
+var dash = dash_button([dash_signal], null, timeout, "all");
 // 1) Trouver l'ip du hub hue avec : https://www.meethue.com/api/nupnp
 // 2) Aller sur <ip hub>/debug/clip.html
 // 3) créer un user pour l'appli, en appuyant sur le bouton hub, puis POST sur /api avec contenu: {"devicetype":"my_hue_app#iphone peter"}
@@ -49,21 +53,27 @@ var turnOffAllLight = function(result){
 
   //drain queue
   q.drain = function() {
-      console.log('On éteins toutes les lumiéres!');
+      console.log('Toutes les lumiéres ont été éteintes!');
   }
 }
 
-//when press detected, turns off all the lights
-offDash.on("detected", function (){
-  api.lights().then(turnOffAllLight).done();
+dash.on("detected", function (dash_id){
+    if (dash_id === dash_signal){
+        console.log("Bouton d'extinction detecté");
+        api.lights().then(turnOffAllLight).done();
+    } else if (dash_id === "2e:3f:20:33:54:22"){
+        console.log("un autre bouton");
+        var state = lightState.create().on();
+        api.setLightState(4, state, function(result){
+          console.log("Allumer le salon");
+        });
+    }
+    else{
+      console.log("un autre truc");
+    }
 });
 
-onDash.on("detected", function (){
-  var state = lightState.create().on();
-  api.setLightState(4, state, function(result){
-    console.log("Allumer le salon");
-  });
-});
+console.log("DASH BUTTON - Mode écoute: ")
 
 /*//Detecter toutes les lampes
 api.lights().then(displayResult).done();
