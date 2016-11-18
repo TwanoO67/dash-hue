@@ -4,7 +4,8 @@
   "description": "A sample Node.js app using Express 4",
   "main": "lights-out.js",
   "scripts": {
-    "start": "sudo node lights-out.js"
+    "start": "sudo node lights-out.js",
+    "detect": "sudo node node_modules/node-dash-button/bin/findbutton"
   },
   "dependencies": {
     "async": "*",
