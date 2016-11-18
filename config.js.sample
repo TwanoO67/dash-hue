@@ -1,0 +1,30 @@
+//Installation:
+// 1) Trouver l'ip du hub hue avec : https://www.meethue.com/api/nupnp
+// 2) Aller sur <ip hub>/debug/clip.html
+// 3) créer un user pour l'appli, en appuyant sur le bouton hub, puis POST sur /api avec contenu: {"devicetype":"my_hue_app#iphone peter"}
+// 4) dans la reponse récupérer le username pour service clé ici
+
+
+var config = {
+  pushbullet: {
+    apikey: 'your acces token ',
+    device_nickname: 'Sony E5823'
+  },
+  hue: {
+    hub_ip: "192.168.0.14",
+    username: "you username from hub"
+  },
+  dash: {
+    buttons: {
+      signal: "18:1e:78:d4:5f:94"
+    },
+    timeout: 20000
+  }
+};
+
+//lister les dash_buttons à ecouter (pas forcement toute la liste)
+config.dash.listen = [
+  config.dash.buttons.signal
+];
+
+module.exports = config;

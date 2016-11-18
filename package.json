@@ -10,7 +10,8 @@
   "dependencies": {
     "async": "*",
     "node-dash-button": "^0.2.6",
-    "node-hue-api": "^2.0.0"
+    "node-hue-api": "^2.0.0",
+    "pushbullet": "^1.4.3"
   },
   "license": "MIT"
 }
